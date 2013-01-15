@@ -1,0 +1,10 @@
+#!/Users/stefan/projects/julia/julia
+
+n = int(ARGS[1])
+println(randn(n,n))
+count = 0
+for i = 1:n
+    a = randi(6,3)
+    count += (3==length(unique(a)))
+end
+println(count/n)
