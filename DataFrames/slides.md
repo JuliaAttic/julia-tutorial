@@ -588,33 +588,6 @@ The Split-Apply-Combine Strategy:
 
 ---
 
-\begin{center}
-    \bf{Let's do some simple machine learning}
-\end{center}
-
----
-
-    using Clustering
-    iris = data("datasets", "iris")
-    k_means(matrix(iris[:, 2:5]), 3)
-    iris["Cluster"] =
-      k_means(matrix(iris[:, 2:5]), 3).assignments
-    by(iris, ["Cluster", "Species"], nrow)
-
----
-
-    using kNN, Resampling
-    iris = data("datasets", "iris")
-    train, test = splitrandom(iris, 0.80)
-    test["Guess"] = knn(matrix(train[:, 2:5]),
-                        matrix(test[:, 2:5]),
-                        vector(train[:, 6]),
-                        10)
-    by(test, ["Species", "Guess"], nrow)
-    mean(test["Guess"] .== test["Species"])
-
----
-
 # Exercises
 
 * Create some DataArray's
@@ -654,3 +627,39 @@ The Split-Apply-Combine Strategy:
     * Clustering package
     * kNN package
     * DecisionTree package
+
+---
+
+    Pkg.add("Clustering")
+    using Clustering
+    iris = data("datasets", "iris")
+    k_means(matrix(iris[:, 2:5]), 3)
+    iris["Cluster"] =
+      k_means(matrix(iris[:, 2:5]), 3).assignments
+    by(iris, ["Cluster", "Species"], nrow)
+
+---
+
+    Pkg.add("kNN")
+    Pkg.add("Resampling")
+    using kNN, Resampling
+    iris = data("datasets", "iris")
+    train, test = splitrandom(iris, 0.80)
+    test["Guess"] = knn(matrix(train[:, 2:5]),
+                        matrix(test[:, 2:5]),
+                        vector(train[:, 6]),
+                        10)
+    by(test, ["Species", "Guess"], nrow)
+    mean(test["Guess"] .== test["Species"])
+
+---
+
+    Pkg.add("DecisionTree")
+    using DecisionTree, Resampling
+    iris = data("datasets", "iris")
+    train, test = splitrandom(iris, 0.80)
+    train_features = matrix(train[:, 2:5])
+    train_labels = vector(train[:, "Species"])
+    t = build_tree(train_features, train_labels)
+    preds = apply_tree(t, matrix(test[:, 2:5]))
+    mean(preds .== test["Species"])
