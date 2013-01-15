@@ -4,10 +4,10 @@
 
 ---
 
-	Pkg.add("DataFrames")
-	Pkg.add("RDatasets")
-	using DataFrames
-	using RDatasets
+	julia> Pkg.add("DataFrames")
+	julia> Pkg.add("RDatasets")
+	julia> using DataFrames
+	julia> using RDatasets
 
 ---
 
@@ -44,20 +44,33 @@ The `NA` type:
 
 ---
 
-    1 + NA
-    1 > NA
-    isna(NA)
+    julia> 1 + NA
+    NA
+    
+    julia> 1 > NA
+    NA
+    
+    julia> isna(NA)
+    true
 
 ---
 
-* `DataArray{T}` extends `Array{T}`
+* `DataArray{T}` adds NA's to `Array{T}`
 * `DataArray{T}` can store `T` or `NA`
 
 ---
 
-    dv = DataArray([1, 2, 3])
-	dv[1] = NA
-    join(dv, "::")
+    julia> dv = DataArray([1, 2, 3])
+    3-element Int64 DataArray:
+     1
+     2
+     3
+
+    julia> dv[1] = NA
+    NA
+
+    julia> join(dv, "::")
+    "NA::2::3"
 
 ---
 
@@ -72,8 +85,20 @@ Convenience constructors:
 
 ---
 
-    dm = dataeye(4)
-    svd(dm)
+    julia> dm = dataeye(2)
+    2x2 Float64 DataArray:
+     1.0  0.0
+     0.0  1.0
+    
+    julia> svd(dm)
+    (
+    2x2 Float64 Array:
+     1.0  0.0
+     0.0  1.0,
+    [1.0, 1.0],
+    2x2 Float64 Array:
+     1.0  0.0
+     0.0  1.0)
 
 ---
 
@@ -85,9 +110,17 @@ Convenience converters:
 
 ---
 
-   dataint([1.0, 2.0, 3.0])
+    julia> dataint([1.0, 2.0, 3.0])
+    3-element Int64 DataArray:
+     1
+     2
+     3
 
-   databool([1, 0, 1])
+    julia> databool([1, 0, 1])
+    3-element Bool DataArray:
+      true
+     false
+      true
 
 ---
 
@@ -101,16 +134,37 @@ Convenience converters:
 
 ---
 
-    pda = PooledDataArray(["String 1",
-                           "String 2",
-                           "String 2",
-                           "String 1"])
-    pda[1] = NA
+    julia> pda = PooledDataArray(["AA", "BB", "BB", "AA"])
+    4-element ASCIIString PooledDataArray:
+     "AA"
+     "BB"
+     "BB"
+     "AA"
+
+    julia> pda[1] = NA
+    NA
 
 ---
 
-    levels(pda)
-    dump(pda)
+    julia> levels(pda)
+    3-element ASCIIString DataArray:
+     "AA"
+     "BB"
+     NA  
+
+---
+
+    julia> pda.refs
+    4-element Uint16 Array:
+     0x0000
+     0x0002
+     0x0002
+     0x0001
+
+    julia> pda.pool
+    2-element ASCIIString Array:
+     "AA"
+     "BB
 
 ---
 
@@ -131,7 +185,21 @@ Convenience converters:
     df["Height"] = DataVector[73.0, 68.0]
     df["Weight"] = DataVector[NA, 130]
     df["Gender"] = DataVector["Male", "Female"]
-    df
+
+---
+
+    julia> df
+    2x4 DataFrame:
+                    Name Height Weight   Gender
+    [1,]    "John Smith"   73.0     NA   "Male"
+    [2,]      "Jane Doe"   68.0    130 "Female"
+
+---
+
+    julia> df["Weight"]
+    2-element Int64 DataArray:
+        NA
+     130  
 
 ---
 
@@ -144,129 +212,337 @@ Convenience converters:
 
 ---
 
-    df = DataFrame()
-    df["A"] = dataones(5)
-    df[2] = datazeros(Int, 5)
-    df
-    df[1, 1]
-    df[1, "A"]
+    julia> df = DataFrame()
+    0x0 DataFrame:
+    
+    julia> df["A"] = dataones(3)
+    3-element Float64 DataArray:
+     1.0
+     1.0
+     1.0
+
+    julia> df[2] = datazeros(Int, 3)
+    3-element Int64 DataArray:
+     0
+     0
+     0
 
 ---
 
-    movies = read_table(joinpath(julia_pkgdir(),
-                                 "DataFrames",
-                                 "test",
-                                 "data",
-                                 "movies.csv"))
+    julia> df
+    3x2 DataFrame:
+              A x2
+    [1,]    1.0  0
+    [2,]    1.0  0
+    [3,]    1.0  0
+
+    julia> df[1, 1]
+    1.0
+
+    julia> df[1, "A"]
+    1.0
 
 ---
 
-    head(movies)
-    tail(movies)
-    movies[1:2, 1:5]
+    julia> path = joinpath(julia_pkgdir(),
+                           "DataFrames",
+                           "test", "data", "types.csv")
+    "/Users/johnmyleswhite/.julia/DataFrames/te...
 
 ---
 
-	iris = data("datasets", "iris")
-	colnames(iris)
-	coltypes(iris)
+    julia> types = read_table(path)
+    3x5 DataFrame:
+            IntColumn IntlikeColumn FloatColumn BoolColumn...
+    [1,]            1           1.0         3.1       true...
+    [2,]            2           7.0      -3.1e8      false...
+    [3,]           -1           7.0     -3.1e-8      false...
 
 ---
 
-	colnames!(iris, colnames(iris))
-    clean_colnames!(iris)
-	colnames(iris)
+    julia> head(types, 2)
+    3x5 DataFrame:
+            IntColumn IntlikeColumn FloatColumn BoolColumn...
+    [1,]            1           1.0         3.1       true...
+    [2,]            2           7.0      -3.1e8      false...
 
 ---
 
-    size(iris)
-
-    nrow(iris)
-    ncol(iris)
-
----
-
-	vcat(iris, iris)
-	hcat(iris, iris)
-
-	rbind(iris, iris)
-	cbind(iris, iris)
+    julia> tail(types, 2)
+    3x5 DataFrame:
+            IntColumn IntlikeColumn FloatColumn BoolColumn...
+    [2,]            2           7.0      -3.1e8      false...
+    [3,]           -1           7.0     -3.1e-8      false...
 
 ---
 
-	iris[1, 1] = NA
-	head(iris)
-	complete_cases(iris)
+    julia> types[1:3, 1:5]
+    3x5 DataFrame:
+            IntColumn IntlikeColumn FloatColumn BoolColumn...
+    [1,]            1           1.0         3.1       true...
+    [2,]            2           7.0      -3.1e8      false...
+    [3,]           -1           7.0     -3.1e-8      false...
 
 ---
 
-	iris[complete_cases(iris), :]
-    complete_cases!(iris)
-    iris
+	julia> iris = data("datasets", "iris")
+    150x6 DataFrame:
+                  Sepal.Length Sepal.Width Petal.Length...
+    [1,]        1          5.1         3.5          1.4...
+    [2,]        2          4.9         3.0          1.4...
+      ...
+    [149,]    149          6.2         3.4          5.4...
+    [150,]    150          5.9         3.0          5.1...
 
 ---
 
-    cut([1, 2, 3, 4, 5, 6], [2, 3])
+    julia> RDatasets.datasets()
+    570-element Any Array:
+     ["COUNT", "affairs"]   
+     ["COUNT", "azdrg112"]  
+     ...
+     ["vcd", "WeldonDice"]  
+     ["vcd", "WomenQueue"]  
 
 ---
 
-    xtabs([1, 2, 3, 3, 4, 2, 3])
+    julia> colnames(iris)
+    6-element Union(ASCIIString,UTF8String) Array:
+     ""            
+     "Sepal.Length"
+     "Sepal.Width" 
+     "Petal.Length"
+     "Petal.Width" 
+     "Species"     
 
 ---
 
-    any(duplicated(iris))
-    any(duplicated(rbind(iris, iris)))
+    julia> coltypes(iris)
+    6-element Any Array:
+     Int64     
+     Float64   
+     Float64   
+     Float64   
+     Float64   
+     UTF8String
 
 ---
 
-    new_iris = rbind(iris, iris)
-    drop_duplicates!(new_iris)
-    new_iris
+    julia> clean_colnames!(iris)
+    
+    julia> colnames(iris)
+    6-element Union(ASCIIString,UTF8String) Array:
+     ""            
+     "Sepal_Length"
+     "Sepal_Width" 
+     "Petal_Length"
+     "Petal_Width" 
+     "Species"     
 
 ---
 
-    vector(iris["Species"])
-    vector(iris["Species"], Any)
+    julia> size(iris)
+    (150,6)
+    
+    julia> nrow(iris)
+    150
+    
+    julia> ncol(iris)
+    6
 
 ---
 
-    matrix(iris)
-    matrix(iris[:, 2:3])
-    matrix(iris[:, 1:3])
-    matrix(iris[:, 1:3], Any)
+	julia> vcat(iris, iris)
+    ...
+
+	julia> hcat(iris, iris)
+    ...
+
+	julia> rbind(iris, iris)
+    ...
+
+	julia> cbind(iris, iris)
+    ...
 
 ---
 
-    with(iris, :(Petal_Length .* Petal_Width))
-    within!(iris,
-            :(Petal_Area = Petal_Length .* Petal_Width))
-    head(iris)
+    julia> iris[1, 1] = NA
+    NA
+    
+    julia> head(iris)
+    6x6 DataFrame:
+               Sepal_Length Sepal_Width Petal_Length...
+    [1,]    NA          5.1         3.5          1.4...
+    [2,]     2          4.9         3.0          1.4...
+    [3,]     3          4.7         3.2          1.3...
+    [4,]     4          4.6         3.1          1.5...
+    [5,]     5          5.0         3.6          1.4...
+    [6,]     6          5.4         3.9          1.7...
+
+---
+
+	julia> complete_cases(iris)
+    150-element Bool Array:
+     false
+      true
+         ...
+      true
+      true
+
+---
+
+	julia> iris[complete_cases(iris), :]
+    ...
+
+---
+
+    julia> complete_cases!(iris)
+    
+    julia> head(iris)
+    6x6 DataFrame:
+              Sepal_Length Sepal_Width Petal_Length...
+    [1,]    2          4.9         3.0          1.4...
+    [2,]    3          4.7         3.2          1.3...
+    [3,]    4          4.6         3.1          1.5...
+    [4,]    5          5.0         3.6          1.4...
+    [5,]    6          5.4         3.9          1.7...
+    [6,]    7          4.6         3.4          1.4...
+
+---
+
+    julia> any(duplicated(iris))
+    false
+    
+    julia> any(duplicated(rbind(iris, iris)))
+    true
+
+---
+
+    julia> new_iris = rbind(iris, iris)
+    ...
+
+    julia> drop_duplicates!(new_iris)
+    
+    julia> nrow(new_iris)
+    149
+
+---
+
+    julia> vector(iris["Species"])
+    149-element UTF8String Array:
+     "setosa"   
+     "setosa"   
+     ...          
+     "virginica"
+     "virginica"
+
+---
+
+    julia> vector(iris["Species"], Any)
+    149-element Any Array:
+     "setosa"   
+     "setosa"   
+     ...          
+     "virginica"
+     "virginica"
+
+---
+
+    julia> matrix(iris)
+    julia> matrix(iris[:, 2:3])
+    julia> matrix(iris[:, 1:3])
+    julia> matrix(iris[:, 1:3], Any)
+
+---
+
+    julia> with(iris, :(Petal_Length .* Petal_Width))
+    149-element Float64 DataArray:
+      0.28
+      0.26
+      ...   
+     12.42
+      9.18
+
+---
+
+    julia> within!(iris,
+                :(Petal_Area = Petal_Length .* Petal_Width))
+    julia> head(iris)
+    6x7 DataFrame:
+              Sepal_Length Sepal_Width Petal_Length...
+    [1,]    2          4.9         3.0          1.4...
+    [2,]    3          4.7         3.2          1.3...
+    [3,]    4          4.6         3.1          1.5...
+    [4,]    5          5.0         3.6          1.4...
+    [5,]    6          5.4         3.9          1.7...
+    [6,]    7          4.6         3.4          1.4...
 
 ---
 
 Database operations on DataFrames:
 
-* CRUD
 * subset
 * merge
 * groupby
 
 ---
 
-    df1 = DataFrame({"a" => [1, 2, 3],
-                     "b" => ["America", "Europe",
-                             "Africa"]})
-    df2 = DataFrame({"a" => [1, 2, 4],
-                     "c" => ["New World", "Old World",
-                             "New World"]})
-    merge(df1, df2)
+    julia> subset(iris, :(Species .== "setosa"))
+    julia> nrow(subset(iris, :(Species .== "setosa")))
+    49
 
 ---
 
-    merge(df1, df2, "a", "inner")
-    merge(df1, df2, "a", "left")
-    merge(df1, df2, "a", "right")
-    merge(df1, df2, "a", "outer")
+    julia> df1 = DataFrame({"a" => [1, 2, 3],
+                            "b" => ["America", "Europe",
+                                    "Africa"]})
+    julia> df2 = DataFrame({"a" => [1, 2, 4],
+                            "c" => ["New World", "Old World",
+                                    "New World"]})
+
+---
+
+    julia> merge(df1, df2)
+    2x3 DataFrame:
+            a         b           c
+    [1,]    1 "America" "New World"
+    [2,]    2  "Europe" "Old World"
+
+---
+
+    julia> merge(df1, df2, "a", "inner")
+    2x3 DataFrame:
+            a         b           c
+    [1,]    1 "America" "New World"
+    [2,]    2  "Europe" "Old World"
+
+---
+
+    julia> merge(df1, df2, "a", "left")
+    3x3 DataFrame:
+            a         b           c
+    [1,]    1 "America" "New World"
+    [2,]    2  "Europe" "Old World"
+    [3,]    3  "Africa"          NA
+
+---
+
+    julia> merge(df1, df2, "a", "right")
+    3x3 DataFrame:
+             a         b           c
+    [1,]     1 "America" "New World"
+    [2,]     2  "Europe" "Old World"
+    [3,]    NA        NA "New World"
+
+---
+
+    julia> merge(df1, df2, "a", "outer")
+    4x3 DataFrame:
+             a         b           c
+    [1,]     1 "America" "New World"
+    [2,]     2  "Europe" "Old World"
+    [3,]     3  "Africa"          NA
+    [4,]    NA        NA "New World"
 
 ---
 
@@ -278,13 +554,37 @@ The Split-Apply-Combine Strategy:
 
 ---
 
-	by(movies, "year", nrow)
-	subset(movies, :(year .== 1893))
+    julia> movies = data("ggplot2", "movies")
+    ...
 
 ---
 
-	by(movies, ["Action", "year"], nrow)
-	subset(movies, :(year .== 1893))
+	julia> by(movies, "year", nrow)
+        113x2 DataFrame:
+              year   x1
+    [1,]      1893    1
+    [2,]      1894    9
+      ...
+    [112,]    2004 1945
+    [113,]    2005  349
+
+---
+
+	julia> subset(movies, :(year .== 1893))
+    1x25 SubDataFrame:    
+                              title year length budget...
+    [1,]    6076 "Blacksmith Scene" 1893      1     NA...
+
+---
+
+	julia> by(movies, ["Action", "year"], nrow)
+        205x3 DataFrame:
+              Action year   x1
+    [1,]           0 1893    1
+    [2,]           0 1894    9
+      ...
+    [204,]         0 2005  306
+    [205,]         1 2005   43
 
 ---
 
@@ -315,12 +615,21 @@ The Split-Apply-Combine Strategy:
 
 ---
 
-Simple exercises:
+# Exercises
 
 * Create some DataArray's
     * A DataArray containing the first five primes
     * A DataArray containing only NA's
     * A DataArray containing DataArray's
+
+---
+
+* Create some PooledDataArray's
+    * A PooledDataArray of all strings
+    * A PooledDataArray of repeated ComplexPair's
+
+---
+
 * Create some DataFrame's
     * A 4x3 DataFrame w/:
         * 4 String's
@@ -329,9 +638,19 @@ Simple exercises:
 
 ---
 
-Advanced exercises:
+* Load more datasets from RDatasets:
+    * Search using `RDatasets.datasets()`
 
-* For each species in `iris`:
+---
+
+* Do some Split-Apply-Combine Working on `iris`:
     * Find the median petal area
     * Find the variance of the petal area
     * Find the centroid of the sepal and petal dimensions
+
+---
+
+* Do some modeling with other packages
+    * Clustering package
+    * kNN package
+    * DecisionTree package
