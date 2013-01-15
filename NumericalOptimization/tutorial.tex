@@ -21,7 +21,7 @@ colorlinks=true
 \maketitle
 
 \section{The cutting plane algorithm}
-This section is meant to be a self-contained presentation of the cutting-plane algorithm for convex optimization. It assumes only a background in calculus. Most of this section can be skipped or skimmed. The essential parts are the statement of Algorithm \ref{algserial} and the paragraph that follows it.\nocite{HiriartLemarechal93book2}
+This section is meant to be a self-contained presentation of the cutting-plane algorithm for convex optimization. It assumes only a background in calculus. We present the one-dimensional case for simplicity. Most of this section can be skipped or skimmed; the fun starts in the next section. The essential parts of this section are the statement of Algorithm \ref{algserial} and the paragraph that follows it.\nocite{HiriartLemarechal93book2}
 
 \begin{defn}
 A function $f : \mathbb{R} \to \mathbb{R}$ is \textit{subdifferentiable} if for all $x' \in \mathbb{R}$, there exists a scalar $g_{x'}$ such that for all $x \in \mathbb{R}$, 
@@ -81,20 +81,10 @@ This model is piecewise linear and is a lower estimate of $f_i$. The idea of the
 An important observation is that the computation of the function values and subderivatives may be performed independently for each $i$ in the \textbf{for} loop. In many applications this computation is expensive, hence there is a real potential for speedup if we parallelize this loop. We will now investigate implementing and parallelizing this algorithm in Julia.
 
 \section{Julia implementation}
-In the previous section we presented the mathematical algorithm. Here we'll work with an actual implementation on a small toy problem and experiment with parallel computing in Julia.
-
-Our toy problem will be based on the functions $f_i(x) = \frac{1}{2}(x-i)^2$. With $f(x) = \sum_{i=1}^n f_i(x)$ as before, we have $f'(x) = \sum_{i=1}^n (x-i)$. Using basic calculus, we know already that the minimizer of $f$ is at $x = \frac{1}{n}\sum_{i=1}^n i = (n+1)/2$.
-
-First, retrieve the code from github (also available directly at the url):
-
-\begin{center}
-\begin{SaveVerbatim}{verb1}
-git clone https://github.com/mlubin/CuttingPlaneToy.git
-\end{SaveVerbatim}
-\fbox{\BUseVerbatim{verb1}}
-\end{center}
+In the previous section we presented the mathematical algorithm. Here we'll work with an actual implementation on a small toy problem and experiment with parallel computing in Julia. First, retrieve the code from \href{https://github.com/JuliaLang/IAP2013/tree/master/NumericalOptimization}{here}.
 The \texttt{Tutorial.jl} file contains the code we will be referring to, while \texttt{ExampleSolution.jl} contains potential solutions to some of the exercises.
-Before running, install the Optim package, \texttt{Pkg.add("Optim")}. We can now run the the code by \texttt{julia Tutorial.jl}. The output should appear as follows:
+
+Our toy problem will be based on the functions $f_i(x) = \frac{1}{2}(x-i)^2$. With $f(x) = \sum_{i=1}^n f_i(x)$ as before, we have $f'(x) = \sum_{i=1}^n (x-i)$. Using basic calculus, we know already that the minimizer of $f$ is at $x = \frac{1}{n}\sum_{i=1}^n i = (n+1)/2$. Before running, install the Optim package, \texttt{Pkg.add("Optim")}. We can now run the the code by \texttt{julia Tutorial.jl}. The output should appear as follows:
 \begin{center}
 \begin{SaveVerbatim}{verb2}
 Solving model with n = 10, initial solution: [0.5]
@@ -131,7 +121,7 @@ From worker 2:	exception on 2: f not defined
 this means that \texttt{f} was only defined on process 1, but you're trying to call it on process 2. Check the documentation or \texttt{ExampleSolution.jl} for a fix.
 
 \begin{ex}\label{ex:par}
-Change $n$ to 20 and run \texttt{julia -p nproc Tutorial.jl} for nproc = 1, 2, 3, 5, 10 on a machine with sufficiently many cores. Because of the randomness in computing times, you may want to repeat and take average execution times. Do you observe speedup? Compute the parallel efficiency (observed speedup divided by perfect speedup) from 1 to 10 processes. 
+Change $n$ to 20 and run \texttt{julia -p nproc Tutorial.jl} for nproc = 1, 2, 3, 5, 10 on a machine with sufficiently many cores. Because of the explicit randomness in computing times, you may want to repeat and take average execution times. Do you observe speedup? Compute the parallel efficiency (observed speedup divided by perfect speedup) from 1 to 10 processes. 
 \end{ex}
 
 \begin{ex}
