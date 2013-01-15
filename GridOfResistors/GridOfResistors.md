@@ -1,9 +1,8 @@
 <HTML>
 
-<body class="class1" alink="#800080" vlink ="#800080" link="#800080"> 
+<body>
 
-<H1>Homework 1: Grid of Resistors</H1>
-<p><em>Due Thursday, 3/11/2004 </em></p>
+<H1>Grid of Resistors</H1>
 
 <h2>Description</h2>
 
@@ -13,9 +12,7 @@ a battery is connected to the two center points. This is a discrete
 version of finding the lines of force using iron filings for a magnet.
 The picture below describes the two dimensional problem.</p>
 
-<center>
-<img src="battery.gif">
-</center>
+[<img src="http://beowulf.lcs.mit.edu/18.337-2004/hw1/battery.gif">]
 
 <p> The method of solution that we will use here is <i>successive
 overrelaxation</i> (SOR) with red-black ordering. This is certainly
@@ -36,6 +33,5 @@ second pass, the black nodes obtain voltages from the four surrounding
 red nodes. The process converges in the limit to the correct answer
 for the finite grid.</p>
 
-<!-- hhmts start --> Last modified: Tue Mar  2 12:52:37 GMT 2004 <!-- hhmts end -->
   </BODY>
 </HTML>
