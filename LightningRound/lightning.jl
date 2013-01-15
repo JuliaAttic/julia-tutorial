@@ -3,7 +3,7 @@ A[1,1]
 rand(5,5)[1,1]
 
 [ i for i=1:5 ]
-[trace(rand(n,n)) for n=1:5]
+[ trace(rand(n,n)) for n=1:5 ]
 x = rand(10)
 [ x[i]+x[i+1] for i=1:9 ]
 { eye(n) for n=1:5 }
