@@ -12,7 +12,7 @@ a battery is connected to the two center points. This is a discrete
 version of finding the lines of force using iron filings for a magnet.
 The picture below describes the two dimensional problem.</p>
 
-[<img src="http://beowulf.lcs.mit.edu/18.337-2004/hw1/battery.gif">]
+<img src="http://beowulf.lcs.mit.edu/18.337-2004/hw1/battery.gif">
 
 <p> The method of solution that we will use here is <i>successive
 overrelaxation</i> (SOR) with red-black ordering. This is certainly
@@ -32,6 +32,14 @@ voltages as a weighted average of their original voltage, the input
 second pass, the black nodes obtain voltages from the four surrounding
 red nodes. The process converges in the limit to the correct answer
 for the finite grid.</p>
+
+A C program is provided in `sor2d.c` and a MATLAB version in `sor2d.m`. Implement the following versions in julia and compare the timings of the different approaches:
+
+1. A vectorized version.
+2. A devectorized version.
+3. Create a stencil function and refactor the stencil part of the computation.
+4. Use the stencil function and implement using comprehensions.
+5. Use a macro for the node updates.
 
   </BODY>
 </HTML>
