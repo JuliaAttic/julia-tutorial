@@ -33,7 +33,7 @@ function do_sor(n, niter)
         r = 2v[n+1,n+1]
         println("Iter = $k, r = $r")
     end
-    toc()
+    toq()
 
 end
 
