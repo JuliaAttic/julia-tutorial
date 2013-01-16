@@ -3,8 +3,8 @@
 % MIT 18.337 - Applied Parallel Computing, Spring 2004
 % Per-Olof Persson <persson@math.mit.edu>
 
-n=100;
-niter=1000;
+n=1000;
+niter=10;
 
 mu = (cos(pi/(2*n))+cos(pi/(2*n+1)))/2;
 om = 2*(1-sqrt(1-mu^2))/mu^2;
