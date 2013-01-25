@@ -1,3 +1,9 @@
+# This file contains all the examples from the presentation
+
+# This file is not executable, and contains examples that will produce
+# errors. It is provided for convenience for students to copy and paste
+# code on the julia prompt.
+
 A = rand(5,5)
 A[1,1]
 rand(5,5)[1,1]
