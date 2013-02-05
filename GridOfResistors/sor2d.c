@@ -6,9 +6,10 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
+#include <time.h>
 
-#define n 100
-#define niter 1000
+#define n 1000
+#define niter 10
 
 #define V(i,j) v[(i)+(2*n+1)*(j)]
 #define SQR(x) ((x)*(x))
@@ -25,6 +26,8 @@ int main(int argc, char **argv)
   om=2.0*(1.0-sqrt(1.0-SQR(mu)))/SQR(mu);
 
   v=(double*)calloc((2*n+2)*(2*n+1),sizeof(double));
+
+  int t1=clock();
 
   for (it=1; it<=niter; it++) {
     /* Update red nodes */
@@ -51,11 +54,13 @@ int main(int argc, char **argv)
     /* RHS */
     V(n,n+1)-=om*0.25;
 
-    if (0) /* Change to 1 for printing (slower) */
+    if (1) /* Change to 1 for printing (slower) */
       printf("Iter = %4d, r = %.16f\n",it,2*V(n,n));
   }
 
-  printf("r = %.16f\n\n",2*V(n,n));
+  int t2 = clock();
+  
+  printf("time per iter = %.5f r = %.5f\n\n", ((t2-t1)/(double)CLOCKS_PER_SEC)/niter, 2*V(n,n));
 
   free(v);
   return 0;
