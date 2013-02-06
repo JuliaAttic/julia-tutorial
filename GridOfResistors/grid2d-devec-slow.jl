@@ -18,8 +18,8 @@ function do_sor(n, niter)
 
         for io = 3:2:2n-1, jo = 3:2:2n+1
             v[io,jo] = (1-om)*v[io,jo] + om*0.25(v[io+1,jo]+v[io-1,jo]+v[io,jo+1]+v[io,jo-1])
-            v[n+1,n+1] = v[n+1,n+1]+0.25om
         end
+        v[n+1,n+1] = v[n+1,n+1]+0.25om
 
         for ie = 2:2:2n, jo = 3:2:2n+1
             v[ie,jo] = (1-om)*v[ie,jo] + om*0.25(v[ie+1,jo]+v[ie-1,jo]+v[ie,jo+1]+v[ie,jo-1])
