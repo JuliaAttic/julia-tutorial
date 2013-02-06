@@ -1,4 +1,6 @@
-/* sor2d.c - Grid of Resistors problem in two dimensions */
+// gcc -O2 grid2d.c -o grid2d
+
+/* grid2d.c - Grid of Resistors problem in two dimensions */
 
 /* MIT 18.337 - Applied Parallel Computing, Spring 2004  */
 /* Per-Olof Persson <persson@math.mit.edu>               */

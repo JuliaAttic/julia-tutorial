@@ -1,4 +1,4 @@
-# grid2d.jl - Grid of Resistors problem in two dimensions
+# grid2d.jl - Grid of Resistors problem in two dimensions using array comprehensions
 
 n     = length(ARGS) >= 1 ? int(ARGS[1]) : 1000
 niter = length(ARGS) >= 2 ? int(ARGS[2]) : 10

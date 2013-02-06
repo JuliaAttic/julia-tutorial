@@ -1,4 +1,5 @@
 # grid2d.jl - Grid of Resistors problem in two dimensions
+# Devectorized version that is fast due to stride 1 array accesses
 
 n     = length(ARGS) >= 1 ? int(ARGS[1]) : 1000
 niter = length(ARGS) >= 2 ? int(ARGS[2]) : 10
