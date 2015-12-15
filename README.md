@@ -1,6 +1,8 @@
 Julia Tutorial from MIT IAP 2013
 ================================
 
+**NOTE:** This is an old tutorial that has not been kept updated with new versions of Julia.
+
 The material here was used in the Julia tutorial at MIT IAP 2013. It contains the following:
 
 1. `LightningRound` is a rapid introduction to Julia, with a number of quick examples designed to give a feel for the language. The presentation and example codes are both included.
